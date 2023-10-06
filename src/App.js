@@ -4,6 +4,7 @@ import RootLayout from "./components/Pages/Root";
 import SignIn from "./components/Pages/SignIn";
 import WelcomePage from "./components/Pages/WelcomePage";
 import UpdateProfile from "./components/Pages/UpdateProfile";
+import EmailVerification from "./components/Pages/EmailVerification";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: "/update-profile", element: <UpdateProfile /> },
     ],
   },
+  { path: "/email-verification", element: <EmailVerification /> },
 ]);
 
 const App = () => {

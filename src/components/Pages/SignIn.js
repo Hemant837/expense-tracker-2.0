@@ -45,7 +45,7 @@ const SignIn = () => {
       console.log("Registration successful!", response.data);
 
       localStorage.setItem("token", response.data.idToken);
-      navigate("/welcome");
+      navigate("/email-verification");
     } catch (error) {
       // Handle errors
       alert("Wrong Credentials");
