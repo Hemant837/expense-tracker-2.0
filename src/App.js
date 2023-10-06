@@ -1,8 +1,9 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./components/Navbar/Pages/Root";
-import SignIn from "./components/Navbar/Pages/SignIn";
-import WelcomePage from "./components/Navbar/Pages/WelcomePage";
+import RootLayout from "./components/Pages/Root";
+import SignIn from "./components/Pages/SignIn";
+import WelcomePage from "./components/Pages/WelcomePage";
+import UpdateProfile from "./components/Pages/UpdateProfile";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
         path: "/welcome",
         element: <WelcomePage />,
       },
+      { path: "/update-profile", element: <UpdateProfile /> },
     ],
   },
 ]);
