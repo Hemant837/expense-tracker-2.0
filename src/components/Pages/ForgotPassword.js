@@ -10,10 +10,15 @@ const ForgotPassword = () => {
     event.preventDefault();
     const enteredVerificationEmail = emailVerificationInputRef.current.value;
     navigate("/");
-    const response = await axios.post(
-      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-      { requestType: "PASSWORD_RESET", email: enteredVerificationEmail }
-    );
+    try {
+      const response = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+        { requestType: "PASSWORD_RESET", email: enteredVerificationEmail }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
