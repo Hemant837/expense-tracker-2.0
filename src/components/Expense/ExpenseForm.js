@@ -1,13 +1,37 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Expense from "./Expense";
+import axios from "axios";
+import formatEmail from "../Function/FormatEmail";
 
-const ExpenseForm = (props) => {
+const ExpenseForm = () => {
+  useEffect(() => {
+    const newData = async () => {
+      try {
+        const response = await axios.post(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+          { idToken: localStorage.getItem("token") }
+        );
+        console.log(response.data.users[0].email);
+        const newResponse = await axios.get(
+          `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+            response.data.users[0].email
+          )}/expenseDetails.json`
+        );
+        console.log(newResponse.data);
+        setNewExpense([...Object.values(newResponse.data)]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    newData();
+  }, []);
+
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
   const categoryInputRef = useRef("");
   const [newExpense, setNewExpense] = useState([]);
 
-  const addExpenseHandler = (event) => {
+  const addExpenseHandler = async (event) => {
     event.preventDefault();
     const enteretMoneySpend = moneySpendInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
@@ -23,6 +47,23 @@ const ExpenseForm = (props) => {
     setNewExpense((previousExpense) => {
       return [...previousExpense, expenseData];
     });
+
+    try {
+      const response = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+        { idToken: localStorage.getItem("token") }
+      );
+      // console.log(response.data.users[0].email);
+      const newResponse = await axios.post(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          response.data.users[0].email
+        )}/expenseDetails.json`,
+        expenseData
+      );
+      console.log(newResponse.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -75,9 +116,11 @@ const ExpenseForm = (props) => {
           Submit
         </button>
       </form>
-      <h2 className="text-2xl font-semibold text-blue-600 my-4">Expense Details</h2>
+      <h2 className="text-2xl font-semibold text-blue-600 my-4">
+        Expense Details
+      </h2>
       {newExpense.map((expense) => {
-        return <Expense newExpense={expense} key={expense.id}/>;
+        return <Expense newExpense={expense} key={expense.id} />;
       })}
     </>
   );
