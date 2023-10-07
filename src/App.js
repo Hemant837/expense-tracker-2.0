@@ -17,6 +17,7 @@ const router = createBrowserRouter([
         element: <WelcomePage />,
       },
       { path: "/update-profile", element: <UpdateProfile /> },
+      { path: "/sign-in", element: <SignIn /> },
     ],
   },
   { path: "/email-verification", element: <EmailVerification /> },

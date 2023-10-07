@@ -3,7 +3,7 @@ import React, { useRef } from "react";
 import { useNavigate } from "react-router";
 
 const EmailVerification = () => {
-  const emailInputRef = useRef("");
+//   const emailInputRef = useRef("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -26,7 +26,7 @@ const EmailVerification = () => {
     <div className="w-80 mt-16 h-auto mx-auto bg-white shadow-lg rounded-lg p-6">
       <h2 className="text-2xl font-semibold text-center mb-4">Verify User</h2>
       <form onSubmit={handleSubmit} className="flex flex-col items-center">
-        <label htmlFor="email" className="mb-2 font-medium text-gray-700">
+        {/* <label htmlFor="email" className="mb-2 font-medium text-gray-700">
           Email
         </label>
         <input
@@ -35,7 +35,7 @@ const EmailVerification = () => {
           type="email"
           ref={emailInputRef}
           required
-        />
+        /> */}
         <button
           type="submit"
           className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors duration-300 focus:ring focus:ring-blue-500 focus:outline-none"
