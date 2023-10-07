@@ -19,6 +19,11 @@ const SignIn = () => {
     setIsFormValid(isValid);
   };
 
+  const forgotPasswordHandler = (event) => {
+    event.preventDefault();
+    navigate("/forgot-password");
+  };
+
   const formHandler = async (event) => {
     event.preventDefault();
 
@@ -45,13 +50,15 @@ const SignIn = () => {
       console.log("Registration successful!", response.data);
 
       localStorage.setItem("token", response.data.idToken);
+
+      emailInputRef.current.value = "";
+      passwordInputRef.current.value = "";
       navigate("/email-verification");
     } catch (error) {
       // Handle errors
       alert("Wrong Credentials");
       console.error("Registration failed:", error);
     }
-    emailInputRef.current.value = "";
     passwordInputRef.current.value = "";
   };
   return (
@@ -87,7 +94,12 @@ const SignIn = () => {
           >
             Login
           </button>
-          <button className=" text-blue-700 underline">Forgot password</button>
+          <button
+            className=" text-blue-700 underline"
+            onClick={forgotPasswordHandler}
+          >
+            Forgot password?
+          </button>
         </form>
       </div>
 
