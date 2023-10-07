@@ -11,7 +11,7 @@ const ExpenseForm = () => {
           "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
           { idToken: localStorage.getItem("token") }
         );
-        console.log(response.data.users[0].email);
+        // console.log(response.data);
         const newResponse = await axios.get(
           `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
             response.data.users[0].email
@@ -33,13 +33,13 @@ const ExpenseForm = () => {
 
   const addExpenseHandler = async (event) => {
     event.preventDefault();
-    const enteretMoneySpend = moneySpendInputRef.current.value;
+    const enteredMoneySpend = moneySpendInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
 
     const expenseData = {
       id: Math.random(),
-      moneySpend: enteretMoneySpend,
+      moneySpend: enteredMoneySpend,
       description: enteredDescription,
       category: enteredCategory,
     };
@@ -49,21 +49,37 @@ const ExpenseForm = () => {
     });
 
     try {
-      const response = await axios.post(
+      const responseForAdd = await axios.post(
         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
         { idToken: localStorage.getItem("token") }
       );
       // console.log(response.data.users[0].email);
-      const newResponse = await axios.post(
+      const newResponseForAdd = await axios.post(
         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          response.data.users[0].email
+          responseForAdd.data.users[0].email
         )}/expenseDetails.json`,
         expenseData
       );
-      console.log(newResponse.data);
+      // console.log(newResponseForAdd.data);
     } catch (error) {
       console.log(error);
     }
+  };
+  const deleteExpenseHandler = (id) => {
+    const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
+
+    if (expenseIndex === -1) {
+      // Handle the case where the expense is not found (optional)
+      console.log(`Expense with id ${id} not found.`);
+      return;
+    }
+
+    // Remove the expense from the newExpense array
+    const updatedExpenses = [...newExpense];
+    updatedExpenses.splice(expenseIndex, 1);
+
+    // Update the state with the updatedExpenses array
+    setNewExpense(updatedExpenses);
   };
 
   return (
@@ -120,7 +136,13 @@ const ExpenseForm = () => {
         Expense Details
       </h2>
       {newExpense.map((expense) => {
-        return <Expense newExpense={expense} key={expense.id} />;
+        return (
+          <Expense
+            newExpense={expense}
+            key={expense.id}
+            onDelete={deleteExpenseHandler()}
+          />
+        );
       })}
     </>
   );
