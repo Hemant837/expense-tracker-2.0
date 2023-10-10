@@ -17,8 +17,11 @@ const ExpenseForm = () => {
             response.data.users[0].email
           )}/expenseDetails.json`
         );
-        console.log(newResponse.data);
-        setNewExpense([...Object.values(newResponse.data)]);
+        const newItems = Object.keys(newResponse.data).map((key) => {
+          return { firebaseId: key, ...newResponse.data[key] };
+        });
+        console.log(newItems);
+        setNewExpense(newItems);
       } catch (error) {
         console.log(error);
       }
@@ -64,8 +67,11 @@ const ExpenseForm = () => {
     } catch (error) {
       console.log(error);
     }
+    moneySpendInputRef.current.value = "";
+    descriptionInputRef.current.value = "";
+    categoryInputRef.current.value = "Food";
   };
-  const deleteExpenseHandler = (id) => {
+  const deleteExpenseHandler = async (id, firebaseId) => {
     const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
 
     if (expenseIndex === -1) {
@@ -80,6 +86,20 @@ const ExpenseForm = () => {
 
     // Update the state with the updatedExpenses array
     setNewExpense(updatedExpenses);
+    try {
+      const responseForDelete = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+        { idToken: localStorage.getItem("token") }
+      );
+      console.log(responseForDelete.data.users[0].email);
+      const newResponseForDelete = await axios.delete(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          responseForDelete.data.users[0].email
+        )}/expenseDetails/${firebaseId}.json`
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -140,7 +160,7 @@ const ExpenseForm = () => {
           <Expense
             newExpense={expense}
             key={expense.id}
-            onDelete={deleteExpenseHandler()}
+            onDelete={deleteExpenseHandler}
           />
         );
       })}

@@ -1,5 +1,6 @@
+import React from "react";
 import axios from "axios";
-import React, { useRef } from "react";
+
 import { useNavigate } from "react-router";
 
 const EmailVerification = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./components/Pages/Root";
-import SignIn from "./components/Pages/SignIn";
+import Authentication  from "./components/Pages/Authentication";
 import WelcomePage from "./components/Pages/WelcomePage";
 import UpdateProfile from "./components/Pages/UpdateProfile";
 import EmailVerification from "./components/Pages/EmailVerification";
@@ -12,13 +12,13 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
-      { index: true, element: <SignIn /> },
+      { index: true, element: <Authentication  /> },
       {
         path: "/welcome",
         element: <WelcomePage />,
       },
       { path: "/update-profile", element: <UpdateProfile /> },
-      { path: "/sign-in", element: <SignIn /> },
+      { path: "/sign-in", element: <Authentication  /> },
       { path: "/forgot-password", element: <ForgotPassword /> },
     ],
   },
