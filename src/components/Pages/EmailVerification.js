@@ -1,10 +1,12 @@
 import React from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router";
 
 const EmailVerification = () => {
-//   const emailInputRef = useRef("");
+  const idToken = useSelector((state) => state.auth.idToken);
+  //   const emailInputRef = useRef("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -14,7 +16,7 @@ const EmailVerification = () => {
     try {
       const response = await axios.post(
         "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-        { requestType: "VERIFY_EMAIL", idToken: localStorage.getItem("token") }
+        { requestType: "VERIFY_EMAIL", idToken: idToken }
       );
       navigate("/welcome");
       console.log(response.data);

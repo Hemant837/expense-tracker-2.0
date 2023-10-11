@@ -4,14 +4,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { authActions } from "../../store/auth";
 
 const Navbar = () => {
-  const isAuth = useSelector((state) => state.isAuthenticated);
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutHandler = (event) => {
     event.preventDefault();
     dispatch(authActions.logout());
-    localStorage.removeItem("token");
+    dispatch(authActions.setIdToken(null));
+    dispatch(authActions.setUserEmail(null));
+
+    // localStorage.removeItem("token");
     navigate("/sign-in");
   };
 

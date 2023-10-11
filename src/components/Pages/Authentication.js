@@ -62,8 +62,12 @@ const Authentication = () => {
         returnSecureToken: true,
       });
       setIsLoading(false);
-      dispatch(authActions.login());
       localStorage.setItem("token", response.data.idToken);
+
+      dispatch(authActions.login());
+      dispatch(authActions.setIdToken(response.data.idToken));
+      dispatch(authActions.setUserEmail(response.data.email));
+
       // Handle success
       console.log("Registration successful!", response.data);
 

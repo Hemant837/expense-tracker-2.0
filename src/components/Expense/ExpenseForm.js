@@ -1,9 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
 import Expense from "./Expense";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
+import { expensesActions } from "../../store/expense";
 import axios from "axios";
 import formatEmail from "../Function/FormatEmail";
 
 const ExpenseForm = () => {
+  const moneySpendInputRef = useRef("");
+  const descriptionInputRef = useRef("");
+  const categoryInputRef = useRef("");
+  const [newExpense, setNewExpense] = useState([]);
+
+  const userEmail = useSelector((state) => state.auth.userEmail);
+  const userExpenses = useSelector((state) => state.expenses.expensesItems);
+  const dispatch = useDispatch();
   useEffect(() => {
     const newData = async () => {
       try {
@@ -11,28 +22,29 @@ const ExpenseForm = () => {
           "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
           { idToken: localStorage.getItem("token") }
         );
-        // console.log(response.data);
+        console.log(response.data);
         const newResponse = await axios.get(
           `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
             response.data.users[0].email
           )}/expenseDetails.json`
         );
+        dispatch(authActions.setIdToken(localStorage.getItem("token")));
+        dispatch(authActions.login());
+        dispatch(authActions.setUserEmail(response.data.users[0].email));
+
         const newItems = Object.keys(newResponse.data).map((key) => {
           return { firebaseId: key, ...newResponse.data[key] };
         });
-        console.log(newItems);
         setNewExpense(newItems);
+
+        dispatch(expensesActions.setExpenses(newItems));
+        console.log(userExpenses);
       } catch (error) {
         console.log(error);
       }
     };
     newData();
   }, []);
-
-  const moneySpendInputRef = useRef("");
-  const descriptionInputRef = useRef("");
-  const categoryInputRef = useRef("");
-  const [newExpense, setNewExpense] = useState([]);
 
   const addExpenseHandler = async (event) => {
     event.preventDefault();
@@ -50,27 +62,24 @@ const ExpenseForm = () => {
     setNewExpense((previousExpense) => {
       return [...previousExpense, expenseData];
     });
-
     try {
-      const responseForAdd = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-        { idToken: localStorage.getItem("token") }
-      );
-      // console.log(response.data.users[0].email);
       const newResponseForAdd = await axios.post(
         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          responseForAdd.data.users[0].email
+          userEmail
         )}/expenseDetails.json`,
         expenseData
       );
-      // console.log(newResponseForAdd.data);
     } catch (error) {
       console.log(error);
     }
+
+    dispatch(expensesActions.setExpenses(expenseData));
+
     moneySpendInputRef.current.value = "";
     descriptionInputRef.current.value = "";
     categoryInputRef.current.value = "Food";
   };
+
   const deleteExpenseHandler = async (id, firebaseId) => {
     const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
 
@@ -86,15 +95,13 @@ const ExpenseForm = () => {
 
     // Update the state with the updatedExpenses array
     setNewExpense(updatedExpenses);
+    console.log(userEmail);
+    dispatch(expensesActions.setExpenses(updatedExpenses));
+
     try {
-      const responseForDelete = await axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-        { idToken: localStorage.getItem("token") }
-      );
-      console.log(responseForDelete.data.users[0].email);
       const newResponseForDelete = await axios.delete(
         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          responseForDelete.data.users[0].email
+          userEmail
         )}/expenseDetails/${firebaseId}.json`
       );
     } catch (error) {

@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import formatEmail from "../Function/FormatEmail";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
 
 const CompleteProfile = () => {
+  const dispatch = useDispatch();
   const [isProfileUpdate, setIsProfileUpdate] = useState(false);
+
   const nameInputRef = useRef("");
   const pUrlRef = useRef("");
 
@@ -14,14 +18,13 @@ const CompleteProfile = () => {
           "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
           { idToken: localStorage.getItem("token") }
         );
-        console.log(response.data.users[0].email);
         const newResponse = await axios.get(
           `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
             response.data.users[0].email
           )}/updatedProfile.json`
         );
         setIsProfileUpdate(true);
-        console.log(newResponse.data);
+        dispatch(authActions.login());
         nameInputRef.current.value = newResponse.data.displayName;
         pUrlRef.current.value = newResponse.data.photoUrl;
       } catch (error) {
