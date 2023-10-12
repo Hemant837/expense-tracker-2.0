@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import expensesActions from "../../store/expense";
-import Expense from "./Expense";
+import { expensesActions } from "../../store/expense";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
@@ -9,47 +8,31 @@ const ExpenseForm = () => {
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
   const categoryInputRef = useRef("");
-  const [newExpense, setNewExpense] = useState([]);
+  // const [newExpense, setNewExpense] = useState([]);
 
-  const addExpenseHandler = async (event) => {
+  const addExpenseHandler = (event) => {
     event.preventDefault();
     const enteredMoneySpend = moneySpendInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
 
     const expenseData = {
-      id: Math.random(),
+      id: Math.random().toString(),
       moneySpend: enteredMoneySpend,
       description: enteredDescription,
       category: enteredCategory,
     };
 
-    setNewExpense((previousExpense) => {
-      return [...previousExpense, expenseData];
-    });
+    // setNewExpense((previousExpense) => {
+    //   return [...previousExpense, expenseData];
+    // });
 
-    dispatch();
+    // Dispatch the action after updating the local state
+    dispatch(expensesActions.setExpenses(expenseData));
 
     moneySpendInputRef.current.value = "";
     descriptionInputRef.current.value = "";
     categoryInputRef.current.value = "Food";
-  };
-
-  const deleteExpenseHandler = async (id, firebaseId) => {
-    const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
-
-    if (expenseIndex === -1) {
-      // Handle the case where the expense is not found (optional)
-      console.log(`Expense with id ${id} not found.`);
-      return;
-    }
-
-    // Remove the expense from the newExpense array
-    const updatedExpenses = [...newExpense];
-    updatedExpenses.splice(expenseIndex, 1);
-
-    // Update the state with the updatedExpenses array
-    setNewExpense(updatedExpenses);
   };
 
   return (
@@ -105,15 +88,6 @@ const ExpenseForm = () => {
       <h2 className="text-2xl font-semibold text-blue-600 my-4">
         Expense Details
       </h2>
-      {newExpense.map((expense) => {
-        return (
-          <Expense
-            newExpense={expense}
-            key={expense.id}
-            onDelete={deleteExpenseHandler}
-          />
-        );
-      })}
     </>
   );
 };

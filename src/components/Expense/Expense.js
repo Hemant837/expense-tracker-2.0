@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { expensesActions } from "../../store/expense";
 
 const Expense = (props) => {
-  const { newExpense, onDelete } = props;
+  const { newExpense } = props;
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...newExpense });
 
@@ -34,6 +37,23 @@ const Expense = (props) => {
       [name]: value,
     });
     console.log("Changing category", name, value);
+  };
+
+  const deleteExpenseHandler = () => {
+    // const expenseIndex = userExpense.findIndex((expense) => expense.id === id);
+
+    // if (expenseIndex === -1) {
+    //   // Handle the case where the expense is not found (optional)
+    //   console.log(`Expense with id ${id} not found.`);
+    //   return;
+    // }
+
+    // // Remove the expense from the newExpense array
+    // const updatedExpenses = [...userExpense];
+    // updatedExpenses.splice(expenseIndex, 1);
+    // Update the state with the updatedExpenses array
+
+    dispatch(expensesActions.setAfterDelete(newExpense.id));
   };
 
   return (
@@ -127,7 +147,7 @@ const Expense = (props) => {
             </button>
             <button
               className="bg-red-600 text-white px-2 py-1 rounded-md"
-              onClick={() => onDelete(newExpense.id, newExpense.firebaseId)}
+              onClick={deleteExpenseHandler}
             >
               Delete
             </button>

@@ -5,11 +5,28 @@ const expensesState = {
 };
 
 const expenseSlice = createSlice({
-  name: "expense",
+  name: "expenses",
   initialState: expensesState,
   reducers: {
     setExpenses(state, action) {
-      state.expensesItems = action.payload;
+      const newExpenseItem = action.payload;
+      state.expensesItems.push({
+        id: newExpenseItem.id,
+        moneySpend: newExpenseItem.moneySpend,
+        description: newExpenseItem.description,
+        category: newExpenseItem.category,
+      });
+      state.totalAmount = state.totalAmount + newExpenseItem.moneySpend;
+    },
+    setAfterDelete(state, action) {
+      const id = action.payload;
+      const existingExpense = state.expensesItems.find(
+        (expense) => expense.id === id
+      );
+      if (existingExpense) {
+        state.expensesItems.filter((expense) => expense.id !== id);
+        state.totalAmount = state.totalAmount - existingExpense.moneySpend;
+      }
     },
   },
 });
