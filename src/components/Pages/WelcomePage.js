@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import ExpenseForm from "../Expense/ExpenseForm";
-
+import Expenses from "../Expense/Expenses";
 const WelcomePage = () => {
   const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ const WelcomePage = () => {
         </button>
       </div>
       <ExpenseForm />
+      <Expenses />
     </div>
   );
 };

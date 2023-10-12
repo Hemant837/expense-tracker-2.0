@@ -14,7 +14,7 @@ const Navbar = () => {
     dispatch(authActions.setIdToken(null));
     dispatch(authActions.setUserEmail(null));
 
-    // localStorage.removeItem("token");
+    localStorage.removeItem("token");
     navigate("/sign-in");
   };
 
