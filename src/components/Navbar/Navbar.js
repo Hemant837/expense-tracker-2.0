@@ -11,9 +11,6 @@ const Navbar = () => {
   const logoutHandler = (event) => {
     event.preventDefault();
     dispatch(authActions.logout());
-    dispatch(authActions.setIdToken(null));
-    dispatch(authActions.setUserEmail(null));
-
     localStorage.removeItem("token");
     navigate("/sign-in");
   };

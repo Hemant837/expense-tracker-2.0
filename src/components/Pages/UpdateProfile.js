@@ -1,39 +1,36 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import formatEmail from "../Function/FormatEmail";
-import {useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth";
 
 const CompleteProfile = () => {
-  const dispatch = useDispatch();
-  const userEmail = useSelector(state => state.auth.userEmail)
   const [isProfileUpdate, setIsProfileUpdate] = useState(false);
-
   const nameInputRef = useRef("");
   const pUrlRef = useRef("");
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.post(
-  //         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-  //         { idToken: localStorage.getItem("token") }
-  //       );
-  //       const newResponse = await axios.get(
-  //         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-  //           response.data.users[0].email
-  //         )}/updatedProfile.json`
-  //       );
-  //       setIsProfileUpdate(true);
-  //       nameInputRef.current.value = newResponse.data.displayName;
-  //       pUrlRef.current.value = newResponse.data.photoUrl;
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+          { idToken: localStorage.getItem("token") }
+        );
+        console.log(response.data.users[0].email);
+        const newResponse = await axios.get(
+          `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+            response.data.users[0].email
+          )}/updatedProfile.json`
+        );
+        setIsProfileUpdate(true);
+        console.log(newResponse.data);
+        nameInputRef.current.value = newResponse.data.displayName;
+        pUrlRef.current.value = newResponse.data.photoUrl;
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  //   fetchData();
-  // }, [userEmail]);
+    fetchData();
+  }, []);
 
   const updateProfileHandler = async (event) => {
     event.preventDefault();

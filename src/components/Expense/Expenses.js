@@ -1,15 +1,22 @@
-import Expense from "./Expense";
 import { useSelector } from "react-redux";
+import Expense from "./Expense";
 
-const Expenses = () => {
-    const newExpenses = useSelector((state) => state.expenses.expenseItems);
+const Expesnes = (props) => {
+  const userExpense = useSelector((state) => state.expenses.expensesItems);
+
   return (
     <>
-      {newExpenses.map((expense) => {
-        return <Expense key={expense.id} newExpense={expense} />;
+      {userExpense.map((expense) => {
+        return (
+          <Expense
+            newExpense={expense}
+            key={expense.id}
+            onDelete={props.onDelete}
+          />
+        );
       })}
     </>
   );
 };
 
-export default Expenses;
+export default Expesnes;

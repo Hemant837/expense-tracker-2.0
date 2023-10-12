@@ -1,122 +1,53 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth";
-import { expensesActions } from "../../store/expense";
+import Expense from "./Expense";
 import axios from "axios";
 import formatEmail from "../Function/FormatEmail";
-import Expenses from "./Expenses";
+import { useDispatch } from "react-redux";
+import { expensesActions } from "../../store/expense";
+import Expenses from "../Expense/Expenses";
 
 const ExpenseForm = () => {
+  // useEffect(() => {
+  //   const newData = async () => {
+  //     try {
+  //       const response = await axios.post(
+  //         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+  //         { idToken: localStorage.getItem("token") }
+  //       );
+  //       // console.log(response.data);
+  //       const newResponse = await axios.get(
+  //         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+  //           response.data.users[0].email
+  //         )}/expenseDetails.json`
+  //       );
+  //       const newItems = Object.keys(newResponse.data).map((key) => {
+  //         return { firebaseId: key, ...newResponse.data[key] };
+  //       });
+  //       console.log(newItems);
+  //       setNewExpense(newItems);
+  //       dispatch(expensesActions.setExpenses(newItems));
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   newData();
+  // }, []);
+
+  const dispatch = useDispatch();
+
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
   const categoryInputRef = useRef("");
-  // const [newExpense, setNewExpense] = useState([]);
-  const dispatch = useDispatch();
+  const [newExpense, setNewExpense] = useState([]);
 
-  // // const userEmail = useSelector((state) => state.auth.userEmail);
-  // // const userExpenses = useSelector((state) => state.expenses.expensesItems);
-
-  // // useEffect(() => {
-  // //   const newData = async () => {
-  // //     try {
-  // //       const response = await axios.post(
-  // //         "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-  // //         { idToken: localStorage.getItem("token") }
-  // //       );
-  // //       console.log(response.data);
-  // //       const newResponse = await axios.get(
-  // //         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-  // //           response.data.users[0].email
-  // //         )}/expenseDetails.json`
-  // //       );
-  // //       dispatch(authActions.setIdToken(localStorage.getItem("token")));
-  // //       dispatch(authActions.login());
-  // //       dispatch(authActions.setUserEmail(response.data.users[0].email));
-
-  // //       const newItems = Object.keys(newResponse.data).map((key) => {
-  // //         return { firebaseId: key, ...newResponse.data[key] };
-  // //       });
-  // //       setNewExpense(newItems);
-
-  // //       dispatch(expensesActions.setExpenses(newItems));
-  // //       console.log(userExpenses);
-  // //     } catch (error) {
-  // //       console.log(error);
-  // //     }
-  // //   };
-  // //   newData();
-  // // }, []);
-
-  // const addExpenseHandler = async (event) => {
-  //   event.preventDefault();
-  // const enteredMoneySpend = moneySpendInputRef.current.value;
-  // const enteredDescription = descriptionInputRef.current.value;
-  // const enteredCategory = categoryInputRef.current.value;
-
-  //   const expenseData = {
-  // id: Math.random().toString(),
-  // moneySpend: enteredMoneySpend,
-  // description: enteredDescription,
-  // category: enteredCategory,
-  //   };
-
-  // setNewExpense((previousExpense) => {
-  //   return [...previousExpense, expenseData];
-  //  });
-  //   // try {
-  //   //   const newResponseForAdd = await axios.post(
-  //   //     `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-  //   //       userEmail
-  //   //     )}/expenseDetails.json`,
-  //   //     expenseData
-  //   //   );
-  //   // } catch (error) {
-  //   //   console.log(error);
-  //   // }
-
-  //   dispatch(expensesActions.setExpenses(newExpense));
-
-  //   moneySpendInputRef.current.value = "";
-  //   descriptionInputRef.current.value = "";
-  //   categoryInputRef.current.value = "Food";
-  // };
-
-  // const deleteExpenseHandler = async (id, firebaseId) => {
-  //   const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
-
-  //   if (expenseIndex === -1) {
-  //     // Handle the case where the expense is not found (optional)
-  //     console.log(`Expense with id ${id} not found.`);
-  //     return;
-  //   }
-
-  //   // Remove the expense from the newExpense array
-  //   const updatedExpenses = [...newExpense];
-  //   updatedExpenses.splice(expenseIndex, 1);
-
-  //   // Update the state with the updatedExpenses array
-  //   setNewExpense(updatedExpenses);
-  //   console.log(userEmail);
-  //   dispatch(expensesActions.setExpenses(updatedExpenses));
-
-  //   try {
-  //     const newResponseForDelete = await axios.delete(
-  //       `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-  //         userEmail
-  //       )}/expenseDetails/${firebaseId}.json`
-  //     );
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const addExpenseHandler = () => {
+  const addExpenseHandler = async (event) => {
+    event.preventDefault();
     const enteredMoneySpend = moneySpendInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
 
     const expenseData = {
-      id: Math.random().toString(),
+      id: Math.random(),
       moneySpend: enteredMoneySpend,
       description: enteredDescription,
       category: enteredCategory,
@@ -125,8 +56,56 @@ const ExpenseForm = () => {
     // setNewExpense((previousExpense) => {
     //   return [...previousExpense, expenseData];
     // });
+    dispatch(expensesActions.setExpenses(expenseData));
+    try {
+      const responseForAdd = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+        { idToken: localStorage.getItem("token") }
+      );
+      // console.log(response.data.users[0].email);
+      const newResponseForAdd = await axios.post(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          responseForAdd.data.users[0].email
+        )}/expenseDetails.json`,
+        expenseData
+      );
+      // console.log(newResponseForAdd.data);
+    } catch (error) {
+      console.log(error);
+    }
+    moneySpendInputRef.current.value = "";
+    descriptionInputRef.current.value = "";
+    categoryInputRef.current.value = "Food";
+  };
+  const deleteExpenseHandler = async (id, firebaseId) => {
+    const expenseIndex = newExpense.findIndex((expense) => expense.id === id);
 
-    dispatch(expensesActions.addNewExpense(expenseData));
+    if (expenseIndex === -1) {
+      // Handle the case where the expense is not found (optional)
+      console.log(`Expense with id ${id} not found.`);
+      return;
+    }
+
+    // Remove the expense from the newExpense array
+    const updatedExpenses = [...newExpense];
+    updatedExpenses.splice(expenseIndex, 1);
+
+    // Update the state with the updatedExpenses array
+    setNewExpense(updatedExpenses);
+    try {
+      const responseForDelete = await axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
+        { idToken: localStorage.getItem("token") }
+      );
+      console.log(responseForDelete.data.users[0].email);
+      const newResponseForDelete = await axios.delete(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          responseForDelete.data.users[0].email
+        )}/expenseDetails/${firebaseId}.json`
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -182,16 +161,16 @@ const ExpenseForm = () => {
       <h2 className="text-2xl font-semibold text-blue-600 my-4">
         Expense Details
       </h2>
-      
       {/* {newExpense.map((expense) => {
         return (
           <Expense
             newExpense={expense}
             key={expense.id}
-            // onDelete={deleteExpenseHandler}
+            onDelete={deleteExpenseHandler}
           />
         );
       })} */}
+      <Expenses onDelete={deleteExpenseHandler} />
     </>
   );
 };
