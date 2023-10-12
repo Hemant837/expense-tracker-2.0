@@ -1,16 +1,19 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { expensesActions } from "../../store/expense";
+import formatEmail from "../Function/FormatEmail";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
+  const userEmail = useSelector((state) => state.auth.userEmail);
 
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
-  const categoryInputRef = useRef("");
-  // const [newExpense, setNewExpense] = useState([]);
+  const categoryInputRef = useRef();
 
-  const addExpenseHandler = (event) => {
+  const addExpenseHandler = async (event) => {
     event.preventDefault();
     const enteredMoneySpend = moneySpendInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
@@ -22,13 +25,20 @@ const ExpenseForm = () => {
       description: enteredDescription,
       category: enteredCategory,
     };
-
-    // setNewExpense((previousExpense) => {
-    //   return [...previousExpense, expenseData];
-    // });
-
     // Dispatch the action after updating the local state
     dispatch(expensesActions.setExpenses(expenseData));
+
+    try {
+      const { data } = await axios.post(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          userEmail
+        )}/expenseData.json`,
+        expenseData
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
 
     moneySpendInputRef.current.value = "";
     descriptionInputRef.current.value = "";

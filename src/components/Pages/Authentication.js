@@ -1,11 +1,11 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { authActions } from "../../store/auth";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
 import axios from "axios";
 
 const Authentication = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const emailInputRef = useRef();
@@ -64,9 +64,9 @@ const Authentication = () => {
       setIsLoading(false);
       localStorage.setItem("token", response.data.idToken);
 
-      // dispatch(authActions.login());
-      // dispatch(authActions.setIdToken(response.data.idToken));
-      // dispatch(authActions.setUserEmail(response.data.email));
+      dispatch(authActions.login());
+      dispatch(authActions.setIdToken(response.data.idToken));
+      dispatch(authActions.setUserEmail(response.data.email));
 
       // Handle success
       console.log("Registration successful!", response.data);

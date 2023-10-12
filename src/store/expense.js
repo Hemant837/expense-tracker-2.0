@@ -8,6 +8,9 @@ const expenseSlice = createSlice({
   name: "expenses",
   initialState: expensesState,
   reducers: {
+    replaceExpenses(state, action) {
+      state.expensesItems = action.payload;
+    },
     setExpenses(state, action) {
       const newExpenseItem = action.payload;
       state.expensesItems.push({
@@ -24,7 +27,9 @@ const expenseSlice = createSlice({
         (expense) => expense.id === id
       );
       if (existingExpense) {
-        state.expensesItems.filter((expense) => expense.id !== id);
+        state.expensesItems = state.expensesItems.filter(
+          (expense) => expense.id !== id
+        );
         state.totalAmount = state.totalAmount - existingExpense.moneySpend;
       }
     },

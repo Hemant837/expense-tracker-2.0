@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { expensesActions } from "../../store/expense";
 
 const Expense = (props) => {
-  const { newExpense } = props;
+  const { newExpense, id } = props;
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...newExpense });
@@ -40,20 +40,10 @@ const Expense = (props) => {
   };
 
   const deleteExpenseHandler = () => {
-    // const expenseIndex = userExpense.findIndex((expense) => expense.id === id);
-
-    // if (expenseIndex === -1) {
-    //   // Handle the case where the expense is not found (optional)
-    //   console.log(`Expense with id ${id} not found.`);
-    //   return;
-    // }
-
-    // // Remove the expense from the newExpense array
-    // const updatedExpenses = [...userExpense];
-    // updatedExpenses.splice(expenseIndex, 1);
-    // Update the state with the updatedExpenses array
-
-    dispatch(expensesActions.setAfterDelete(newExpense.id));
+    console.log("In Delete");
+    console.log(id);
+    dispatch(expensesActions.setAfterDelete(id));
+    
   };
 
   return (
