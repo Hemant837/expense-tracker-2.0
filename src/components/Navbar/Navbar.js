@@ -1,27 +1,27 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth";
+// import { useSelector, useDispatch } from "react-redux";
+// import { authActions } from "../../store/auth";
 
 const Navbar = () => {
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
-  const dispatch = useDispatch();
+  // const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const logoutHandler = (event) => {
     event.preventDefault();
-    dispatch(authActions.logout());
-    dispatch(authActions.setIdToken(null));
-    dispatch(authActions.setUserEmail(null));
+    // dispatch(authActions.logout());
+    // dispatch(authActions.setIdToken(null));
+    // dispatch(authActions.setUserEmail(null));
 
-    // localStorage.removeItem("token");
+    localStorage.removeItem("token");
     navigate("/sign-in");
   };
 
   return (
     <div className="flex items-center justify-around bg-blue-500 h-16 text-white shadow">
       <h2 className="font-bold text-xl">Expense Tracker</h2>
-      {isAuth && (
+      {/* {isAuth && ( */}
         <nav className="flex items-center">
           <ul className="flex justify-evenly w-96">
             <li>
@@ -41,7 +41,7 @@ const Navbar = () => {
             Logout
           </button>
         </nav>
-      )}
+      {/* )} */}
     </div>
   );
 };

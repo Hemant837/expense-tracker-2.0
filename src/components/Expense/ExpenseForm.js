@@ -1,50 +1,15 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import expensesActions from "../../store/expense";
 import Expense from "./Expense";
-import { useSelector, useDispatch } from "react-redux";
-import { authActions } from "../../store/auth";
-import { expensesActions } from "../../store/expense";
-import axios from "axios";
-import formatEmail from "../Function/FormatEmail";
 
 const ExpenseForm = () => {
+  const dispatch = useDispatch();
+
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
   const categoryInputRef = useRef("");
   const [newExpense, setNewExpense] = useState([]);
-
-  const userEmail = useSelector((state) => state.auth.userEmail);
-  const userExpenses = useSelector((state) => state.expenses.expensesItems);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const newData = async () => {
-      try {
-        const response = await axios.post(
-          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-          { idToken: localStorage.getItem("token") }
-        );
-        console.log(response.data);
-        const newResponse = await axios.get(
-          `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-            response.data.users[0].email
-          )}/expenseDetails.json`
-        );
-        dispatch(authActions.setIdToken(localStorage.getItem("token")));
-        dispatch(authActions.login());
-        dispatch(authActions.setUserEmail(response.data.users[0].email));
-
-        const newItems = Object.keys(newResponse.data).map((key) => {
-          return { firebaseId: key, ...newResponse.data[key] };
-        });
-        setNewExpense(newItems);
-
-        dispatch(expensesActions.setExpenses(newItems));
-        console.log(userExpenses);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    newData();
-  }, []);
 
   const addExpenseHandler = async (event) => {
     event.preventDefault();
@@ -62,18 +27,8 @@ const ExpenseForm = () => {
     setNewExpense((previousExpense) => {
       return [...previousExpense, expenseData];
     });
-    try {
-      const newResponseForAdd = await axios.post(
-        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          userEmail
-        )}/expenseDetails.json`,
-        expenseData
-      );
-    } catch (error) {
-      console.log(error);
-    }
 
-    dispatch(expensesActions.setExpenses(expenseData));
+    dispatch();
 
     moneySpendInputRef.current.value = "";
     descriptionInputRef.current.value = "";
@@ -95,18 +50,6 @@ const ExpenseForm = () => {
 
     // Update the state with the updatedExpenses array
     setNewExpense(updatedExpenses);
-    console.log(userEmail);
-    dispatch(expensesActions.setExpenses(updatedExpenses));
-
-    try {
-      const newResponseForDelete = await axios.delete(
-        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          userEmail
-        )}/expenseDetails/${firebaseId}.json`
-      );
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (

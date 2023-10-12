@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { expensesActions } from "../../store/expense";
-import formatEmail from "../Function/FormatEmail";
 
 const Expense = (props) => {
-  const userEmail = useSelector((state) => state.auth.userEmail);
   const { newExpense, onDelete } = props;
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...newExpense });
-
-  const dispatch = useDispatch();
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -23,25 +16,6 @@ const Expense = (props) => {
 
   const handleSaveEdit = async () => {
     setIsEditing(false);
-    try {
-      // const responseForSaveEdit = await axios.post(
-      //   "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
-      //   { idToken: localStorage.getItem("token") }
-      // );
-
-      const responseForSaveEdit = await axios.put(
-        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-          userEmail
-        )}/expenseDetails/${editedExpense.firebaseId}.json`,
-        editedExpense
-      );
-      dispatch(expensesActions.setExpenses(editedExpense));
-      console.log(responseForSaveEdit.data);
-      console.log(userEmail);
-      console.log(editedExpense);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleInputChange = (event) => {
