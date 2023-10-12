@@ -10,7 +10,7 @@ const ExpenseForm = () => {
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
   const categoryInputRef = useRef("");
-  const [newExpense, setNewExpense] = useState([]);
+  // const [newExpense, setNewExpense] = useState([]);
   const dispatch = useDispatch();
 
   // // const userEmail = useSelector((state) => state.auth.userEmail);
@@ -122,9 +122,9 @@ const ExpenseForm = () => {
       category: enteredCategory,
     };
 
-    setNewExpense((previousExpense) => {
-      return [...previousExpense, expenseData];
-    });
+    // setNewExpense((previousExpense) => {
+    //   return [...previousExpense, expenseData];
+    // });
 
     dispatch(expensesActions.addNewExpense(expenseData));
   };
