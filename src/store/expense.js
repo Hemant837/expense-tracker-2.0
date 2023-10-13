@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const expensesState = {
   expensesItems: [],
+  totalAmount: 0,
 };
 
 const expenseSlice = createSlice({
@@ -19,7 +20,7 @@ const expenseSlice = createSlice({
         description: newExpenseItem.description,
         category: newExpenseItem.category,
       });
-      state.totalAmount = state.totalAmount + newExpenseItem.moneySpend;
+      state.totalAmount = state.totalAmount + Number(newExpenseItem.moneySpend);
     },
     setAfterDelete(state, action) {
       const id = action.payload;
@@ -30,8 +31,12 @@ const expenseSlice = createSlice({
         state.expensesItems = state.expensesItems.filter(
           (expense) => expense.id !== id
         );
-        state.totalAmount = state.totalAmount - existingExpense.moneySpend;
+        state.totalAmount =
+          state.totalAmount - Number(existingExpense.moneySpend);
       }
+    },
+    setTotalAmount(state, action) {
+      state.totalAmount = action.payload;
     },
   },
 });

@@ -1,10 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 import { expensesActions } from "../../store/expense";
+import formatEmail from "../Function/FormatEmail";
 
 const Expense = (props) => {
   const { newExpense, id } = props;
   const dispatch = useDispatch();
+  const userEmail = useSelector((state) => state.auth.userEmail);
+
+  // const expensesAmount = useSelector((state) => state.expenses.totalAmount);
+  // console.log(expensesAmount);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...newExpense });
 
@@ -43,7 +50,16 @@ const Expense = (props) => {
     console.log("In Delete");
     console.log(id);
     dispatch(expensesActions.setAfterDelete(id));
-    
+    try {
+      const { data } = axios.delete(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          userEmail
+        )}/expenseData/${editedExpense.firebaseId}.json`
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

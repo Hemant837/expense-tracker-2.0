@@ -34,7 +34,7 @@ const App = () => {
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.auth.userEmail);
   // useffect for user validation
-  console.log(userEmail);
+
   useEffect(() => {
     const idToken = localStorage.getItem("token");
 
@@ -62,29 +62,34 @@ const App = () => {
   useEffect(() => {
     const idToken = localStorage.getItem("token");
     const fetchExpenses = async (idToken) => {
-      if (userEmail) {
+      if (idToken) {
         try {
           const response = await axios.post(
             "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBD17gSdbGkKc24yZR25v2eG7khNSNiLuE",
             { idToken: idToken }
           );
-          console.log(response.data.users[0].email);
-          const fetchExpensesResposne = await axios.get(
-            `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
-              response.data.users[0].email
-            )}/expenseData.json`
-          );
-          console.log(fetchExpensesResposne.data);
-          const newItems = Object.keys(fetchExpensesResposne.data).map(
-            (key) => {
-              return {
-                firebaseId: key,
-                ...fetchExpensesResposne.data[key],
-              };
-            }
-          );
-          dispatch(expensesActions.replaceExpenses(newItems))
-          console.log(newItems);
+          if (response.data) {
+            const fetchExpensesResposne = await axios.get(
+              `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+                response.data.users[0].email
+              )}/expenseData.json`
+            );
+            const newItems = Object.keys(fetchExpensesResposne.data).map(
+              (key) => {
+                return {
+                  firebaseId: key,
+                  ...fetchExpensesResposne.data[key],
+                };
+              }
+            );
+            let totalAmount = 0;
+            newItems.forEach((item) => {
+              totalAmount += Number(item.moneySpend);
+            });
+
+            dispatch(expensesActions.setTotalAmount(totalAmount));
+            dispatch(expensesActions.replaceExpenses(newItems));
+          }
         } catch (error) {
           console.log(error);
         }
