@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expensesActions } from "../../store/expense";
 import formatEmail from "../Function/FormatEmail";
 
@@ -8,9 +8,7 @@ const Expense = (props) => {
   const { newExpense, id } = props;
   const dispatch = useDispatch();
   const userEmail = useSelector((state) => state.auth.userEmail);
-
-  // const expensesAmount = useSelector((state) => state.expenses.totalAmount);
-  // console.log(expensesAmount);
+  const darkTheme = useSelector((state) => state.theme.darkTheme);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...newExpense });
@@ -26,11 +24,12 @@ const Expense = (props) => {
 
   const handleSaveEdit = async () => {
     setIsEditing(false);
+
+    dispatch(expensesActions.updateExpense(editedExpense));
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log("Editing", name, value);
     setEditedExpense({
       ...editedExpense,
       [name]: value,
@@ -43,27 +42,23 @@ const Expense = (props) => {
       ...editedExpense,
       [name]: value,
     });
-    console.log("Changing category", name, value);
   };
 
   const deleteExpenseHandler = () => {
-    console.log("In Delete");
-    console.log(id);
     dispatch(expensesActions.setAfterDelete(id));
     try {
-      const { data } = axios.delete(
+      axios.delete(
         `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
           userEmail
         )}/expenseData/${editedExpense.firebaseId}.json`
       );
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-md mb-4">
+    <div className={`p-4 mb-4 rounded-lg shadow-md ${darkTheme ? "bg-gray-900 text-gray-300" : "bg-white text-gray-700"}`}>
       {isEditing ? (
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-1/3 mb-4 pr-4">
@@ -74,7 +69,9 @@ const Expense = (props) => {
               id="edited-money-spend"
               type="number"
               name="moneySpend"
-              className="border rounded-md w-full py-2 px-3 text-gray-700"
+              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+                darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
+              }`}
               value={editedExpense.moneySpend}
               onChange={handleInputChange}
             />
@@ -87,7 +84,9 @@ const Expense = (props) => {
               id="edited-description"
               type="text"
               name="description"
-              className="border rounded-md w-full py-2 px-3 text-gray-700"
+              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+                darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
+              }`}
               value={editedExpense.description}
               onChange={handleInputChange}
             />
@@ -99,7 +98,9 @@ const Expense = (props) => {
             <select
               id="edited-category"
               name="category"
-              className="border rounded-md w-full py-2 px-3 text-gray-700"
+              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+                darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
+              }`}
               value={editedExpense.category}
               onChange={handleCategoryChange}
             >
@@ -111,13 +112,17 @@ const Expense = (props) => {
           </div>
           <div className="w-full">
             <button
-              className="bg-blue-600 text-white px-2 py-1 rounded-md mr-2"
+              className={`${
+                darkTheme ? "bg-gray-700 text-white" : "bg-blue-600 text-white"
+              } px-2 py-1 rounded-md mr-2`}
               onClick={handleSaveEdit}
             >
               Save
             </button>
             <button
-              className="bg-gray-400 text-white px-2 py-1 rounded-md"
+              className={`${
+                darkTheme ? "bg-gray-700 text-white" : "bg-gray-400 text-white"
+              } px-2 py-1 rounded-md`}
               onClick={handleCancelEdit}
             >
               Cancel
@@ -128,31 +133,35 @@ const Expense = (props) => {
         <div className="flex justify-between items-center">
           <div>
             <p className="text-lg font-semibold text-blue-600">Money Spent:</p>
-            <p className="text-gray-800 font-medium">
+            <p className={`text-gray-800 font-medium ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
               &#8377;{editedExpense.moneySpend}
             </p>
           </div>
           <div>
             <p className="text-lg font-semibold text-blue-600">Description:</p>
-            <p className="text-gray-800 font-medium uppercase">
+            <p className={`text-gray-800 font-medium uppercase ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
               {editedExpense.description}
             </p>
           </div>
           <div>
             <p className="text-lg font-semibold text-blue-600">Category:</p>
-            <p className="text-gray-800 font-medium uppercase">
+            <p className={`text-gray-800 font-medium uppercase ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
               {editedExpense.category}
             </p>
           </div>
           <div>
             <button
-              className="bg-blue-600 text-white px-2 py-1 rounded-md mr-2"
+              className={`${
+                darkTheme ? "bg-gray-700 text-white" : "bg-blue-600 text-white"
+              } px-2 py-1 rounded-md mr-2`}
               onClick={handleEditClick}
             >
               Edit
             </button>
             <button
-              className="bg-red-600 text-white px-2 py-1 rounded-md"
+              className={`${
+                darkTheme ? "bg-gray-700 text-white" : "bg-red-600 text-white"
+              } px-2 py-1 rounded-md`}
               onClick={deleteExpenseHandler}
             >
               Delete
