@@ -7,8 +7,7 @@ const WelcomePage = () => {
   // const navigate = useNavigate();
   const darkTheme = useSelector((state) => state.theme.darkTheme);
   const totalExpenses = useSelector((state) => state.expenses.expensesItems);
-  const totalMoneySpent = useSelector((state) => state.expenses.totalAmount)
-
+  const totalMoneySpent = useSelector((state) => state.expenses.totalAmount);
 
   // const navigateHandler = () => {
   //   navigate("/update-profile");
@@ -21,7 +20,7 @@ const WelcomePage = () => {
 
     const csvContent = `Money Spend, Description, Category\n${csvData.join(
       "\n"
-    )}\nTotal Amount, ${totalMoneySpent}`;
+    )}\n\n\nTotal Amount, ${totalMoneySpent}`;
     const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -36,7 +35,9 @@ const WelcomePage = () => {
     : "bg-white-500 text-blue-600 font-semibold";
 
   return (
-    <div className={`my-4 mx-auto text-center ${containerClasses}`}>
+    <div
+      className={`my-4 mx-auto max-w-screen-md text-center ${containerClasses}`}
+    >
       <h2 className="text-3xl font-semibold mb-4">
         Welcome to Expense Tracker
       </h2>
@@ -61,14 +62,16 @@ const WelcomePage = () => {
         Total Expense: &#8377;{totalMoneySpent.toFixed(2)}
       </p>
       <Expenses />
-      <button
-        className={`rounded-lg p-4 flex flex-col items-center ${
-          darkTheme ? "bg-gray-700" : "bg-blue-600 text-white"
-        }`}
-        onClick={downloadCSV}
-      >
-        Download Expense
-      </button>
+      <div className="flex justify-center"> {/* Center the button */}
+        <button
+          className={`rounded-lg p-4 flex flex-col items-center ${
+            darkTheme ? "bg-gray-700" : "bg-blue-600 text-white"
+          }`}
+          onClick={downloadCSV}
+        >
+          Download Expense
+        </button>
+      </div>
     </div>
   );
 };

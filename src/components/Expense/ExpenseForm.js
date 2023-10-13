@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { expensesActions } from "../../store/expense";
@@ -11,7 +12,7 @@ const ExpenseForm = () => {
 
   const moneySpendInputRef = useRef("");
   const descriptionInputRef = useRef("");
-  const categoryInputRef = useRef();
+  const categoryInputRef = useRef("");
 
   const addExpenseHandler = async (event) => {
     event.preventDefault();
@@ -20,7 +21,7 @@ const ExpenseForm = () => {
     const enteredCategory = categoryInputRef.current.value;
 
     const expenseData = {
-      id: Math.random().toString(),
+      id: uuidv4(),
       moneySpend: enteredMoneySpend,
       description: enteredDescription,
       category: enteredCategory,
@@ -63,7 +64,9 @@ const ExpenseForm = () => {
         <div className="mb-4">
           <label
             htmlFor="money-spend"
-            className={`block ${darkTheme ? "text-gray-300" : "text-gray-700"}`}
+            className={`block font-semibold ${
+              darkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
           >
             Money Spend
           </label>
@@ -79,7 +82,9 @@ const ExpenseForm = () => {
         <div className="mb-4">
           <label
             htmlFor="expense-description"
-            className={`block ${darkTheme ? "text-gray-300" : "text-gray-700"}`}
+            className={`block font-semibold ${
+              darkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
           >
             Description of the expense
           </label>
@@ -101,9 +106,7 @@ const ExpenseForm = () => {
           </label>
           <select
             id="category"
-            className={`border rounded-md w-full py-2 px-3 ${
-              darkTheme ? "text-gray-300" : "text-gray-700"
-            }`}
+            className="border rounded-md w-full py-2 px-3 text-black font-semibold"
             ref={categoryInputRef}
           >
             <option value="food">Food</option>
@@ -115,12 +118,12 @@ const ExpenseForm = () => {
         <button
           className={`px-4 py-2 ${
             darkTheme
-              ? "bg-blue-300 hover:bg-blue-400"
+              ? "bg-gray-600 hover:bg-blue-400"
               : "bg-blue-600 hover:bg-blue-700"
           } text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none`}
           type="submit"
         >
-          Submit
+          Add Expense
         </button>
       </form>
       <h2

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { expensesActions } from "../../store/expense";
@@ -25,7 +25,18 @@ const Expense = (props) => {
   const handleSaveEdit = async () => {
     setIsEditing(false);
 
-    dispatch(expensesActions.updateExpense(editedExpense));
+    dispatch(expensesActions.editExpense(editedExpense));
+    try {
+      const { data } = axios.put(
+        `https://expense-tracker-9f544-default-rtdb.firebaseio.com/${formatEmail(
+          userEmail
+        )}/expenseData/${editedExpense.firebaseId}.json`,
+        editedExpense
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleInputChange = (event) => {
@@ -58,7 +69,11 @@ const Expense = (props) => {
   };
 
   return (
-    <div className={`p-4 mb-4 rounded-lg shadow-md ${darkTheme ? "bg-gray-900 text-gray-300" : "bg-white text-gray-700"}`}>
+    <div
+      className={`p-4 mb-4 rounded-lg shadow-md ${
+        darkTheme ? "bg-gray-900 text-gray-300" : "bg-white text-gray-700"
+      }`}
+    >
       {isEditing ? (
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-1/3 mb-4 pr-4">
@@ -132,20 +147,32 @@ const Expense = (props) => {
       ) : (
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-lg font-semibold text-blue-600">Money Spent:</p>
-            <p className={`text-gray-800 font-medium ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
+            <p className="text-lg font-semibold text-blue-300">Money Spent:</p>
+            <p
+              className={`text-gray-800 font-medium ${
+                darkTheme ? "text-gray-300" : "text-gray-800"
+              }`}
+            >
               &#8377;{editedExpense.moneySpend}
             </p>
           </div>
           <div>
-            <p className="text-lg font-semibold text-blue-600">Description:</p>
-            <p className={`text-gray-800 font-medium uppercase ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
+            <p className="text-lg font-semibold text-blue-300">Description:</p>
+            <p
+              className={`text-gray-800 font-medium uppercase ${
+                darkTheme ? "text-gray-300" : "text-gray-800"
+              }`}
+            >
               {editedExpense.description}
             </p>
           </div>
           <div>
-            <p className="text-lg font-semibold text-blue-600">Category:</p>
-            <p className={`text-gray-800 font-medium uppercase ${darkTheme ? "text-gray-300" : "text-gray-800"}`}>
+            <p className="text-lg font-semibold text-blue-300">Category:</p>
+            <p
+              className={`text-gray-800 font-medium uppercase ${
+                darkTheme ? "text-gray-300" : "text-gray-800"
+              }`}
+            >
               {editedExpense.category}
             </p>
           </div>
