@@ -73,7 +73,11 @@ const Authentication = () => {
 
       emailInputRef.current.value = "";
       passwordInputRef.current.value = "";
-      navigate("/welcome");
+      if (isLogin) {
+        navigate("/welcome");
+      } else {
+        navigate("/email-verification");
+      }
     } catch (error) {
       // Handle errors
       alert("Wrong Credentials");

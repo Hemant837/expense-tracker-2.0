@@ -1,17 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import Expenses from "../Expense/Expenses";
 
 const WelcomePage = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const darkTheme = useSelector((state) => state.theme.darkTheme);
   const totalExpenses = useSelector((state) => state.expenses.expensesItems);
   const totalMoneySpent = useSelector((state) => state.expenses.totalAmount);
 
-  // const navigateHandler = () => {
-  //   navigate("/update-profile");
-  // };
+  const navigateHandler = () => {
+    navigate("/update-profile");
+  };
 
   const downloadCSV = () => {
     const csvData = totalExpenses.map((expense) => {
@@ -35,18 +35,16 @@ const WelcomePage = () => {
     : "bg-white-500 text-blue-600 font-semibold";
 
   return (
-    <div
-      className={`my-4 mx-auto max-w-screen-md text-center ${containerClasses}`}
-    >
+    <div className={`mx-auto  text-center ${containerClasses}`}>
       <h2 className="text-3xl font-semibold mb-4">
         Welcome to Expense Tracker
       </h2>
-      {/* <div
+      <div
         className={`rounded-lg p-4 flex flex-col items-center ${
           darkTheme ? "bg-gray-900" : "bg-orange-300"
         }`}
       >
-        <p className="text-lg mb-2">Your profile is incomplete.</p>
+        <p className="text-lg mb-2">Check Your Profile</p>
         <button
           className={`px-4 py-2 ${
             darkTheme
@@ -55,14 +53,14 @@ const WelcomePage = () => {
           } text-white rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none`}
           onClick={navigateHandler}
         >
-          Complete Now
+          Profile
         </button>
-      </div> */}
+      </div>
       <p className="text-lg font-semibold my-4">
         Total Expense: &#8377;{totalMoneySpent.toFixed(2)}
       </p>
       <Expenses />
-      <div className="flex justify-center"> {/* Center the button */}
+      <div className="flex justify-center">
         <button
           className={`rounded-lg p-4 flex flex-col items-center ${
             darkTheme ? "bg-gray-700" : "bg-blue-600 text-white"

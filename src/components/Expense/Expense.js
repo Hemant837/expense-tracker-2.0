@@ -77,14 +77,14 @@ const Expense = (props) => {
       {isEditing ? (
         <div className="flex flex-wrap justify-between">
           <div className="w-full md:w-1/3 mb-4 pr-4">
-            <label htmlFor="edited-money-spend" className="block text-gray-700">
+            <label htmlFor="edited-money-spend" className="block text-gray-200">
               Money Spend:
             </label>
             <input
               id="edited-money-spend"
               type="number"
               name="moneySpend"
-              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+              className={`border rounded-md w-full py-2 px-3 text-gray-200 ${
                 darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
               }`}
               value={editedExpense.moneySpend}
@@ -92,14 +92,14 @@ const Expense = (props) => {
             />
           </div>
           <div className="w-full md:w-1/3 mb-4 pr-4">
-            <label htmlFor="edited-description" className="block text-gray-700">
+            <label htmlFor="edited-description" className="block text-gray-200">
               Description:
             </label>
             <input
               id="edited-description"
               type="text"
               name="description"
-              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+              className={`border rounded-md w-full py-2 px-3 text-gray-200 ${
                 darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
               }`}
               value={editedExpense.description}
@@ -107,13 +107,13 @@ const Expense = (props) => {
             />
           </div>
           <div className="w-full md:w-1/3 mb-4">
-            <label htmlFor="edited-category" className="block text-gray-700">
+            <label htmlFor="edited-category" className="block text-gray-200">
               Category:
             </label>
             <select
               id="edited-category"
               name="category"
-              className={`border rounded-md w-full py-2 px-3 text-gray-700 ${
+              className={`border rounded-md w-full py-2 px-3 text-gray-200 ${
                 darkTheme ? "bg-gray-800 text-gray-300" : "bg-white"
               }`}
               value={editedExpense.category}
@@ -147,9 +147,9 @@ const Expense = (props) => {
       ) : (
         <div className="flex justify-between items-center">
           <div>
-            <p className="text-lg font-semibold text-blue-300">Money Spent:</p>
+            <p className="text-lg font-semibold text-blue-300">Money Spend:</p>
             <p
-              className={`text-gray-800 font-medium ${
+              className={`text-gray-200 font-medium ${
                 darkTheme ? "text-gray-300" : "text-gray-800"
               }`}
             >
@@ -159,7 +159,7 @@ const Expense = (props) => {
           <div>
             <p className="text-lg font-semibold text-blue-300">Description:</p>
             <p
-              className={`text-gray-800 font-medium uppercase ${
+              className={`text-gray-200 font-medium uppercase ${
                 darkTheme ? "text-gray-300" : "text-gray-800"
               }`}
             >
@@ -169,7 +169,7 @@ const Expense = (props) => {
           <div>
             <p className="text-lg font-semibold text-blue-300">Category:</p>
             <p
-              className={`text-gray-800 font-medium uppercase ${
+              className={`text-gray-200 font-medium uppercase ${
                 darkTheme ? "text-gray-300" : "text-gray-800"
               }`}
             >
